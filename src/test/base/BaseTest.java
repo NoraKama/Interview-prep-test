@@ -8,7 +8,6 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class BaseTest {
@@ -16,6 +15,7 @@ public class BaseTest {
 
     @BeforeMethod
     public void setUp() {
+        initializeDriver("chrome");
         driver.get("https://interview-prep-test.herokuapp.com/");
     }
 
