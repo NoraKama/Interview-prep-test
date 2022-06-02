@@ -1,67 +1,61 @@
 package tests;
-
-
 import base.BaseTest;
-
 import org.openqa.selenium.By;
-
 import org.openqa.selenium.WebElement;
-
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.HomePage;
+import pages.LoginPage;
 
 import java.util.List;
 
-
 public class HomeTest extends BaseTest {
+    LoginPage loginPage;
+    HomePage homePage;
 
+    @BeforeMethod
+    public void localSetUp(){
+        loginPage = new LoginPage(getDriver());
+        homePage = new HomePage(getDriver());
+    }
 
     @Test(testName = "IN-1 - Test Title", description = "Validating title on home page")
-    public void test01() {
-        //signing in as a user
-        getDriver().findElement(By.name("email")).sendKeys("test@yahoo.com");
-        getDriver().findElement(By.name("password")).sendKeys("test123");
-        getDriver().findElement(By.xpath("//div[@class='container']/button")).click();
+    public void test01(){
+        loginPage.signIn();
         Assert.assertEquals(getDriver().getTitle(), "Interview App");
     }
 
     @Test(testName = "IN-2 - Test Sign Out button", description = "Testing visibility of the Sign out button")
-    public void test02() {
-        //signing in as a user
-        getDriver().findElement(By.name("email")).sendKeys("test@yahoo.com");
-        getDriver().findElement(By.name("password")).sendKeys("test123");
-        getDriver().findElement(By.xpath("//div[@class='container']/button")).click();
-        Assert.assertTrue(getDriver().findElement(By.xpath("//nav//a/u[text()='Sign out']")).isEnabled());
+    public void test02(){
+        loginPage.signIn();
+        Assert.assertTrue(homePage.signOutBtn.isEnabled());
     }
 
     @Test(testName = "IN-2 - Test Manage Access button", description = "Testing button is not visible")
-    public void test03() {
-        //signing in as a user
-        getDriver().findElement(By.name("email")).sendKeys("test@yahoo.com");
-        getDriver().findElement(By.name("password")).sendKeys("test123");
-        getDriver().findElement(By.xpath("//div[@class='container']/button")).click();
-        List<WebElement> elementList = getDriver().findElements(By.xpath("//*[text()='Manage Access']"));
+    public void test03(){
+        loginPage.signIn();
+        List<WebElement> elementList = homePage.manageAccessBtns;
         Assert.assertEquals(elementList.size(), 0);
     }
 
-    @Test(testName = "IN-3 - Default dashboards", description = "Validate 3 dashboards are present")
-    public void test04() {
+    @Test(testName = "IN-3 - Default dashboards",  description = "Validate 3 dashboards are present")
+    public void test04(){
         //signing in as a user
         getDriver().findElement(By.name("email")).sendKeys("test@yahoo.com");
         getDriver().findElement(By.name("password")).sendKeys("test123");
         getDriver().findElement(By.xpath("//div[@class='container']/button")).click();
         String[] data = {"All Topics", "Coding", "Soft skills"};
-        for (String text : data) {
+        for(String text: data){
             Assert.assertTrue(getDriver().findElement(
                     By.xpath("//form[@class='form-inline']//button[text()='" + text + "']")).isEnabled());
         }
     }
 
     @Test(testName = "IN-4 - Statement Do's section", description = "Verify user can add a statement in Do's section")
-    public void test05() {
+    public void test05(){
         //signing in as a user
         getDriver().findElement(By.name("email")).sendKeys("test@yahoo.com");
         getDriver().findElement(By.name("password")).sendKeys("test123");
@@ -89,7 +83,7 @@ public class HomeTest extends BaseTest {
     }
 
     @Test(testName = "IN-4 - Statement Dont's section", description = "Verify user can add a statement in Dont's section")
-    public void test06() {
+    public void test06(){
         //signing in as a user
         getDriver().findElement(By.name("email")).sendKeys("test@yahoo.com");
         getDriver().findElement(By.name("password")).sendKeys("test123");
@@ -116,4 +110,6 @@ public class HomeTest extends BaseTest {
 
         Assert.assertEquals(actualText, statement);
     }
+
+
 }
